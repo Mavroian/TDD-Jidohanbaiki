@@ -1,4 +1,4 @@
-const VendingMachine = require("../VendingMachine");
+const { VendingMachine } = require("../VendingMachine");
 const { expect } = require("chai");
 
 describe("vending machine", () => {
@@ -17,5 +17,18 @@ describe("vending machine", () => {
       500: 1,
     });
     expect(machine.balance).to.equal(500); // Use an ES6 getter
+  });
+  it("should give change back", () => {
+    const machine = new VendingMachine();
+
+    machine.insertCoin(500);
+
+    machine.selectRow(0);
+
+    machine.selectColumn(0);
+
+    let change = machine.changeReturn();
+    expect(change).to.equal(400);
+    expect(machine.balance).to.equal(0);
   });
 });
