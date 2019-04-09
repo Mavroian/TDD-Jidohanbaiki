@@ -51,6 +51,9 @@ class VendingMachine {
     this.till[coin]++;
   }
   selectRow(row) {
+    if (this._balance === 0) {
+      throw "Please insert coin";
+    }
     if (typeof row !== "number" || row > 4) {
       throw "Please input a number from 0 to 4 ";
     }
@@ -67,14 +70,14 @@ class VendingMachine {
     }
     if (this.selectedProduct === 0) {
       this.selectedProduct = this.selectedRow[col];
-      return this.selectedProduct;
+      return `You have selected ${this.selectedProduct}`;
     } else {
       return this.selectedProduct;
     }
   }
+
   changeReturn() {
     this._balance = 0;
-    this.change -= this.selectedProduct.price;
     return this.change;
   }
 }
