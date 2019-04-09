@@ -18,6 +18,25 @@ describe("vending machine", () => {
     });
     expect(machine.balance).to.equal(500); // Use an ES6 getter
   });
+  it("should be able to select a row", () => {
+    const machine = new VendingMachine();
+
+    machine.insertCoin(500);
+    const row = machine.selectRow(1);
+    const product = row[0];
+    const row2 = machine.selectRow(2);
+
+    expect(row).to.be.an("array");
+    expect(product.price).to.be.a("number");
+    expect(product.name).to.be.a("string");
+    expect(row2).to.equal(row);
+    try {
+      machine.selectRow(5);
+      machine.selectRow("A");
+    } catch (err) {
+      expect(err).to.eql("Please input a number from 0 to 4 ");
+    }
+  });
   it("should give change back", () => {
     const machine = new VendingMachine();
 
@@ -29,6 +48,6 @@ describe("vending machine", () => {
 
     let change = machine.changeReturn();
     expect(change).to.equal(400);
-    expect(machine.balance).to.equal(0);
+    expect(machine._balance).to.equal(0);
   });
 });

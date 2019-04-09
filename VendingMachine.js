@@ -43,26 +43,38 @@ class VendingMachine {
   get balance() {
     for (const key in this.till) {
       this._balance += Number(key) * this.till[key];
-      this.change += this._balance;
     }
     return this._balance;
   }
   insertCoin(coin) {
+    this.change = coin;
     this.till[coin]++;
   }
-  selectRow(r) {
-    this.selectRow = this.inventory[r];
-    return this.selectRow;
+  selectRow(row) {
+    if (typeof row !== "number" || row > 4) {
+      throw "Please input a number from 0 to 4 ";
+    }
+    if (this.selectedRow === 0) {
+      this.selectedRow = this.inventory[row];
+      return this.selectedRow;
+    } else {
+      return this.selectedRow;
+    }
   }
-  selectColumn(c) {
-    this.selectedProduct = this.selectRow[c];
-    return this.selectedProduct;
+  selectColumn(col) {
+    if (typeof col !== "number" || col > 4) {
+      throw "Please input a number from 0 to 4 ";
+    }
+    if (this.selectedProduct === 0) {
+      this.selectedProduct = this.selectedRow[col];
+      return this.selectedProduct;
+    } else {
+      return this.selectedProduct;
+    }
   }
   changeReturn() {
-    console.log(this.selectedProduct.price);
     this._balance = 0;
-    this.change - 100;
-
+    this.change -= this.selectedProduct.price;
     return this.change;
   }
 }
