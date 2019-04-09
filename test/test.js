@@ -16,7 +16,7 @@ describe("vending machine", () => {
       100: 0,
       500: 1,
     });
-    expect(machine.balance).to.equal(500); // Use an ES6 getter
+    expect(machine._balance).to.equal(500); // Use an ES6 getter
   });
   it("should be able to select a row", () => {
     const machine = new VendingMachine();
@@ -40,6 +40,12 @@ describe("vending machine", () => {
   });
   it("should be able to select a column", () => {
     const machine = new VendingMachine();
+    try {
+      machine.selectRow(0);
+    } catch (err) {
+      expect(err).to.eql("Please insert coin");
+    }
+    machine.insertCoin(500);
     machine.selectRow(0);
     const column = machine.selectColumn(0);
     const column2 = machine.selectColumn(1);
@@ -49,11 +55,25 @@ describe("vending machine", () => {
     expect(column.price).to.be.a("number");
     expect(machine.selectColumn).to.be.a("function");
     expect(column2).to.equal(column);
+
     try {
       machine.selectColumn(5);
     } catch (err) {
       expect(err).to.eql("Please input a number from 0 to 4 ");
     }
+  });
+  it("should dispense a product and update inventory", () => {
+    const machine = new VendingMachine();
+    machine.insertCoin(500);
+
+    machine.selectRow(0);
+
+    const selectedProduct = machine.selectColumn(0);
+    const invCount = machine[selectedProduct.name].count;
+    const product = machine.dispenseProduct();
+    expect(machine.dispenseProduct).to.be.a("function");
+    expect(product).to.equal(selectedProduct.name);
+    expect(machine[selectedProduct.name].count).to.equal(invCount - 1);
   });
   it("should give change back", () => {
     const machine = new VendingMachine();
@@ -63,6 +83,7 @@ describe("vending machine", () => {
     machine.selectRow(0);
 
     machine.selectColumn(0);
+    machine.dispenseProduct();
 
     let change = machine.changeReturn();
     expect(change).to.equal(400);

@@ -49,6 +49,7 @@ class VendingMachine {
   insertCoin(coin) {
     this.change = coin;
     this.till[coin]++;
+    this.balance;
   }
   selectRow(row) {
     if (this._balance === 0) {
@@ -70,9 +71,20 @@ class VendingMachine {
     }
     if (this.selectedProduct === 0) {
       this.selectedProduct = this.selectedRow[col];
-      return `You have selected ${this.selectedProduct}`;
+      return this.selectedProduct;
     } else {
       return this.selectedProduct;
+    }
+  }
+  updateInventory() {
+    this[this.selectedProduct.name].count -= 1;
+  }
+  dispenseProduct() {
+    if (this._balance > this.selectedProduct.price) {
+      this._balance -= this.selectedProduct.price;
+      this.change = this._balance;
+      this.updateInventory();
+      return this.selectedProduct.name;
     }
   }
 
