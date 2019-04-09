@@ -30,9 +30,27 @@ describe("vending machine", () => {
     expect(product.price).to.be.a("number");
     expect(product.name).to.be.a("string");
     expect(row2).to.equal(row);
+    expect(machine.selectRow).to.be.a("function");
     try {
       machine.selectRow(5);
       machine.selectRow("A");
+    } catch (err) {
+      expect(err).to.eql("Please input a number from 0 to 4 ");
+    }
+  });
+  it("should be able to select a column", () => {
+    const machine = new VendingMachine();
+    machine.selectRow(0);
+    const column = machine.selectColumn(0);
+    const column2 = machine.selectColumn(1);
+
+    expect(column).to.be.an("object");
+    expect(column.name).to.be.a("string");
+    expect(column.price).to.be.a("number");
+    expect(machine.selectColumn).to.be.a("function");
+    expect(column2).to.equal(column);
+    try {
+      machine.selectColumn(5);
     } catch (err) {
       expect(err).to.eql("Please input a number from 0 to 4 ");
     }
